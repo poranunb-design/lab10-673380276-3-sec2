@@ -58,11 +58,12 @@ public class ProductController {
      * Hint: เรียก service.getAll()
      * ทดสอบ: GET http://localhost:8080/products
      */
-    @GetMapping
-    public Flux<Product> getAll() {
-        // TODO: เติม code ตรงนี้
-        return null; // ← แก้บรรทัดนี้
-    }
+@GetMapping
+public Flux<Product> getAll() {
+
+    return service.getAll();
+
+}
 
     /**
      * POST /products
@@ -73,10 +74,11 @@ public class ProductController {
      *        Body: { "name": "...", "price": 999.0, ... }
      */
     @PostMapping
-    public Mono<Product> save(@RequestBody Product product) {
-        // TODO: เติม code ตรงนี้
-        return null; // ← แก้บรรทัดนี้
-    }
+public Mono<Product> save(@RequestBody Product product) {
+
+    return service.save(product);
+
+}
 
     /**
      * DELETE /products/{id}
@@ -85,11 +87,12 @@ public class ProductController {
      * Hint: เรียก service.delete(id)
      * ทดสอบ: DELETE http://localhost:8080/products/1
      */
-    @DeleteMapping("/{id}")
-    public Mono<Void> delete(@PathVariable String id) {
-        // TODO: เติม code ตรงนี้
-        return null; // ← แก้บรรทัดนี้
-    }
+@DeleteMapping("/{id}")
+public Mono<Void> delete(@PathVariable String id) {
+
+    return service.delete(id);
+
+}
 
     /**
      * GET /products/category/{category}
@@ -98,11 +101,13 @@ public class ProductController {
      * Hint: เรียก service.getByCategory(category)
      * ทดสอบ: GET http://localhost:8080/products/category/Electronics
      */
-    @GetMapping("/category/{category}")
-    public Flux<Product> getByCategory(@PathVariable String category) {
-        // TODO: เติม code ตรงนี้
-        return null; // ← แก้บรรทัดนี้
-    }
+   @GetMapping("/category/{category}")
+public Flux<Product> getByCategory(
+        @PathVariable String category) {
+
+    return service.getByCategory(category);
+
+}
 
     /**
      * GET /products/{id}/price
@@ -112,8 +117,10 @@ public class ProductController {
      * ทดสอบ: GET http://localhost:8080/products/1/price
      */
     @GetMapping("/{id}/price")
-    public Mono<Double> getDiscountedPrice(@PathVariable String id) {
-        // TODO: เติม code ตรงนี้
-        return null; // ← แก้บรรทัดนี้
-    }
+public Mono<Double> getDiscountedPrice(
+        @PathVariable String id) {
+
+    return service.getDiscountedPrice(id);
+
+}
 }

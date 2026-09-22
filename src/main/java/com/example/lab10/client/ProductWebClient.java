@@ -54,10 +54,15 @@ public class ProductWebClient {
      *         .retrieve()
      *         .bodyToFlux(Product.class)
      */
-    public Flux<Product> getAllProducts() {
-        // TODO: เติม code ตรงนี้
-        return null; // ← แก้บรรทัดนี้
-    }
+public Flux<Product> getAllProducts() {
+
+    return client.get()
+            .uri("/products")
+            .retrieve()
+            .bodyToFlux(Product.class);
+
+}
+
 
     /**
      * POST /products → Mono<Product>
@@ -69,11 +74,15 @@ public class ProductWebClient {
      *         .retrieve()
      *         .bodyToMono(Product.class)
      */
-    public Mono<Product> createProduct(Product product) {
-        // TODO: เติม code ตรงนี้
-        return null; // ← แก้บรรทัดนี้
-    }
+  public Mono<Product> createProduct(Product product) {
 
+    return client.post()
+            .uri("/products")
+            .bodyValue(product)
+            .retrieve()
+            .bodyToMono(Product.class);
+
+}
     /**
      * DELETE /products/{id} → Mono<Void>
      * TODO: ส่ง request ลบ Product
@@ -83,10 +92,14 @@ public class ProductWebClient {
      *         .retrieve()
      *         .bodyToMono(Void.class)
      */
-    public Mono<Void> deleteProduct(String id) {
-        // TODO: เติม code ตรงนี้
-        return null; // ← แก้บรรทัดนี้
-    }
+public Mono<Void> deleteProduct(String id) {
+
+    return client.delete()
+            .uri("/products/{id}", id)
+            .retrieve()
+            .bodyToMono(Void.class);
+
+}
 
     /**
      * GET /products/category/{category} → Flux<Product>
@@ -97,10 +110,14 @@ public class ProductWebClient {
      *         .retrieve()
      *         .bodyToFlux(Product.class)
      */
-    public Flux<Product> getByCategory(String category) {
-        // TODO: เติม code ตรงนี้
-        return null; // ← แก้บรรทัดนี้
-    }
+   public Flux<Product> getByCategory(String category) {
+
+    return client.get()
+            .uri("/products/category/{category}", category)
+            .retrieve()
+            .bodyToFlux(Product.class);
+
+}
 
     /**
      * GET /products/{id}/price → Mono<Double>
@@ -114,7 +131,16 @@ public class ProductWebClient {
      *         .doOnNext(price -> System.out.println("Price: " + price))
      */
     public Mono<Double> getDiscountedPrice(String id) {
-        // TODO: เติม code ตรงนี้
-        return null; // ← แก้บรรทัดนี้
-    }
+
+    return client.get()
+            .uri("/products/{id}/price", id)
+            .retrieve()
+            .bodyToMono(Double.class)
+            .doOnNext(
+                    price -> System.out.println(
+                            "Price: " + price
+                    )
+            );
+
+}
 }

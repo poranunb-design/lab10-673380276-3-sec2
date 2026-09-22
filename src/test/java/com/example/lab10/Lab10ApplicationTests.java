@@ -10,25 +10,13 @@ import reactor.test.StepVerifier;
 /**
  * Lab10ApplicationTests — ทดสอบ Reactive code
  *
- * ✅ test findById() ทำเสร็จแล้วเป็นตัวอย่าง
- * ❌ TODO: เพิ่ม test สำหรับ method ที่นักศึกษาทำเอง
- *
- * StepVerifier — วิธีทดสอบ Mono/Flux:
- *   StepVerifier.create(mono/flux)
- *     .expectNext(value)     ← คาดหวังค่าที่ได้
- *     .expectNextCount(n)    ← คาดหวังจำนวน element
- *     .verifyComplete()      ← ยืนยัน onComplete
- *     .verifyError()         ← ยืนยัน onError
+ * StepVerifier — วิธีทดสอบ Mono/Flux
  */
 @SpringBootTest
 class Lab10ApplicationTests {
 
     @Autowired
     private ProductRepository repository;
-
-    // ══════════════════════════════════════════════════════
-    // ✅ ตัวอย่าง test — ศึกษาแล้วเพิ่ม test เอง
-    // ══════════════════════════════════════════════════════
 
     @Test
     void contextLoads() {
@@ -37,7 +25,6 @@ class Lab10ApplicationTests {
 
     @Test
     void testFindById_found() {
-        // ✅ ตัวอย่าง: ทดสอบ findById ที่พบข้อมูล
         StepVerifier.create(repository.findById("1"))
                 .expectNextMatches(p -> p.getName().contains("iPhone"))
                 .verifyComplete();
@@ -45,32 +32,51 @@ class Lab10ApplicationTests {
 
     @Test
     void testFindById_notFound() {
-        // ✅ ตัวอย่าง: ทดสอบ findById ที่ไม่พบข้อมูล
         StepVerifier.create(repository.findById("999"))
-                .verifyComplete(); // Mono.empty() → onComplete ทันที
+                .verifyComplete();
     }
-
-    // ══════════════════════════════════════════════════════
-    // ❌ TODO: เพิ่ม test ด้านล่างนี้
-    // ══════════════════════════════════════════════════════
 
     @Test
     void testFindAll() {
-        // TODO: ทดสอบว่า findAll() คืน Flux ที่มี element
-        // Hint: StepVerifier.create(repository.findAll())
-        //         .expectNextCount(3)   ← มี 3 รายการ
-        //         .verifyComplete()
+        StepVerifier.create(repository.findAll())
+                .expectNextCount(3)
+                .verifyComplete();
     }
 
     @Test
     void testSave() {
-        // TODO: ทดสอบ save() บันทึกแล้วคืน Product
-        // Hint: สร้าง Product ใหม่ → save → expectNext → verifyComplete
+
+        Product product = new Product(
+                "test-100",
+                "Test Product",
+                "TestCategory",
+                "TestBrand",
+                10,
+                1000.0,
+                "NONE"
+        );
+
+        StepVerifier.create(
+                repository.save(product)
+                        .flatMap(saved ->
+                                repository.deleteById(saved.getId())
+                                        .thenReturn(saved)
+                        )
+        )
+                .expectNextMatches(p ->
+                        p.getId().equals("test-100")
+                                && p.getName().equals("Test Product")
+                                && p.getPrice().equals(1000.0)
+                )
+                .verifyComplete();
     }
 
     @Test
     void testFindByCategory() {
-        // TODO: ทดสอบ findByCategory("Electronics")
-        // Hint: expectNextCount(3) เพราะมี 3 รายการใน Electronics
+        StepVerifier.create(
+                repository.findByCategory("Electronics")
+        )
+                .expectNextCount(3)
+                .verifyComplete();
     }
 }
